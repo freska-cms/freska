@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fragmenta/assets"
+	"github.com/freska/assets"
 )
 
 // RunDeploy builds the assets, builds the server,

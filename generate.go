@@ -18,7 +18,7 @@ const (
 	permissions = 0744
 
 	// Our routes template file path
-	routesTemplatePath = "src/lib/templates/fragmenta_app/routes.go.tmpl"
+	routesTemplatePath = "src/lib/templates/freska_app/routes.go.tmpl"
 
 	// Our default path for writing routes
 	routesFilePath = "src/app/routes.go"
@@ -35,7 +35,7 @@ var (
 // - generate migration
 // - generate resource pages name:text summary:text
 func RunGenerate(args []string) {
-	// Remove fragmenta generate from args list
+	// Remove freska generate from args list
 	args = args[2:]
 
 	if len(args) < 2 {
@@ -61,7 +61,7 @@ func RunGenerate(args []string) {
 		sql := generateJoinSQL(args)
 		generateMigration(name, sql)
 	default:
-		fmt.Println("Sorry, I didn't recognise that argument, you can use fragmenta generate [migration|resource|join]")
+		fmt.Println("Sorry, I didn't recognise that argument, you can use freska generate [migration|resource|join]")
 	}
 }
 
@@ -155,7 +155,7 @@ func generateResourceRoutes() {
 	routesStart := "// Resource Routes\n"
 	routes = strings.Replace(routes, routesStart, routesStart+resourceRoutes+"\n", 1)
 
-	resourceImport := reifyString("\t\"[[.fragmenta_app_path]]/[[.fragmenta_resources]]/actions\"\n")
+	resourceImport := reifyString("\t\"[[.freska_app_path]]/[[.freska_resources]]/actions\"\n")
 	importStart := "// Resource Actions\n"
 	routes = strings.Replace(routes, importStart, importStart+resourceImport, 1)
 
@@ -202,8 +202,8 @@ CREATE TABLE [[.join_table]] (
 func generateResourceMigration(joinsSQL string) {
 
 	// We add the following fields to all resourceNames
-	sql := `DROP TABLE IF EXISTS [[.fragmenta_resources]];
-CREATE TABLE [[.fragmenta_resources]] (
+	sql := `DROP TABLE IF EXISTS [[.freska_resources]];
+CREATE TABLE [[.freska_resources]] (
 id SERIAL NOT NULL,
 created_at timestamp,
 updated_at timestamp,
@@ -216,7 +216,7 @@ updated_at timestamp,
 	sql = sql + ");\n"
 	sql = strings.Replace(sql, ",\n)", "\n)", -1)
 
-	sql += "ALTER TABLE [[.fragmenta_resources]] OWNER TO [[.fragmenta_db_user]];\n"
+	sql += "ALTER TABLE [[.freska_resources]] OWNER TO [[.freska_db_user]];\n"
 
 	sql = reifyString(sql)
 
@@ -290,7 +290,7 @@ func appServerName() string {
 }
 
 func appTemplatesPath() string {
-	return filepath.Join(fullAppPath(), "src", "lib", "templates", "fragmenta_resources")
+	return filepath.Join(fullAppPath(), "src", "lib", "templates", "freska_resources")
 }
 
 func generateResourceFiles() error {
@@ -330,9 +330,9 @@ func copyAndReifyFiles(srcPath string, dstPath string) error {
 		err = filepath.Walk(srcPath, func(fileSrc string, info os.FileInfo, err error) error {
 			fileDst := dstPath
 
-			// split the srcPath on 'fragmenta_resources'
+			// split the srcPath on 'freska_resources'
 			// and use everything after that as the dst path
-			srcParts := strings.Split(fileSrc, "/fragmenta_resources/")
+			srcParts := strings.Split(fileSrc, "/freska_resources/")
 			if len(srcParts) == 2 {
 				fileDst = filepath.Join(dstPath, srcParts[1])
 			}
@@ -409,11 +409,11 @@ func renderTemplate(tmpl string, context map[string]string) string {
 
 // Generate golang assignments for our struct fields with validation.
 func newFields() string {
-	tmpl := "\t[[.fragmenta_resource]].[[.field_name]] = resource.Validate[[.validate_type]](cols[\"[[.col_name]]\"])\n"
+	tmpl := "\t[[.freska_resource]].[[.field_name]] = resource.Validate[[.validate_type]](cols[\"[[.col_name]]\"])\n"
 	fields := ""
 	for _, k := range sortedKeys(columns) {
 		fieldContext := map[string]string{
-			"fragmenta_resource": resourceName,
+			"freska_resource": resourceName,
 			"col_name":           k,
 			"field_name":         ToCamel(k),
 			"validate_type":      toValidateType(columns[k]),
@@ -431,10 +431,10 @@ func structFields() string {
 	fields := ""
 	for _, k := range sortedKeys(columns) {
 		fieldContext := map[string]string{
-			"fragmenta_resources": ToPlural(resourceName),
-			"fragmenta_resource":  resourceName,
-			"Fragmenta_Resources": ToCamel(ToPlural(resourceName)),
-			"Fragmenta_Resource":  ToCamel(resourceName),
+			"freska_resources": ToPlural(resourceName),
+			"freska_resource":  resourceName,
+			"Freska_Resources": ToCamel(ToPlural(resourceName)),
+			"Freska_Resource":  ToCamel(resourceName),
 			"field_name":          ToCamel(k),
 			"field_type":          toGoType(columns[k]),
 		}
@@ -447,15 +447,15 @@ func structFields() string {
 
 // Generate show page fields for our columns
 func showFields() string {
-	tmpl := "\t<p>[[.field_name]]: {{ .[[.fragmenta_resource]].[[.field_name]] }}</p>\n"
+	tmpl := "\t<p>[[.field_name]]: {{ .[[.freska_resource]].[[.field_name]] }}</p>\n"
 	fields := ""
 
 	for _, k := range sortedKeys(columns) {
 		fieldContext := map[string]string{
-			"fragmenta_resources": ToPlural(resourceName),
-			"fragmenta_resource":  resourceName,
-			"Fragmenta_Resources": ToCamel(ToPlural(resourceName)),
-			"Fragmenta_Resource":  ToCamel(resourceName),
+			"freska_resources": ToPlural(resourceName),
+			"freska_resource":  resourceName,
+			"Freska_Resources": ToCamel(ToPlural(resourceName)),
+			"Freska_Resource":  ToCamel(resourceName),
 			"field_name":          ToCamel(k),
 		}
 		fields += renderTemplate(tmpl, fieldContext)
@@ -485,7 +485,7 @@ func showcolumns() string {
 func formFields() string {
 
 	fields := ""
-	tmpl := `    {{ [[.method]] "[[.field_name]]" "[[.column_name]]" .[[.fragmenta_resource]].[[.field_name]] }}
+	tmpl := `    {{ [[.method]] "[[.field_name]]" "[[.column_name]]" .[[.freska_resource]].[[.field_name]] }}
 `
 	for _, k := range sortedKeys(columns) {
 
@@ -494,10 +494,10 @@ func formFields() string {
 			fields += fmt.Sprintf(`{{ select "Status" "status" .%s.Status .%s.StatusOptions }}`, resourceName, resourceName)
 		} else {
 			fieldContext := map[string]string{
-				"fragmenta_resources": ToPlural(resourceName),
-				"fragmenta_resource":  resourceName,
-				"Fragmenta_Resources": ToCamel(ToPlural(resourceName)),
-				"Fragmenta_Resource":  ToCamel(resourceName),
+				"freska_resources": ToPlural(resourceName),
+				"freska_resource":  resourceName,
+				"Freska_Resources": ToCamel(ToPlural(resourceName)),
+				"Freska_Resource":  ToCamel(resourceName),
 				"method":              "field",
 				"column_name":         k,
 				"field_name":          ToCamel(k),
@@ -516,27 +516,27 @@ func formFields() string {
 func reifyName(name string) string {
 	name = strings.Replace(name, ".go.tmpl", ".go", -1)   // go files
 	name = strings.Replace(name, ".got.tmpl", ".got", -1) // template files
-	name = strings.Replace(name, "fragmenta_resource", resourceName, -1)
-	name = strings.Replace(name, "fragmenta_resources", ToPlural(resourceName), -1)
+	name = strings.Replace(name, "freska_resource", resourceName, -1)
+	name = strings.Replace(name, "freska_resources", ToPlural(resourceName), -1)
 	return name
 }
 
 // Make this template string concrete by filling in values
 func reifyString(tmpl string) string {
 	context := map[string]string{
-		"fragmenta_app_path":    filepath.Join(appPath(), appGeneratePath()),
-		"fragmenta_resources":   ToPlural(resourceName),
-		"fragmenta_resource":    resourceName,
-		"Fragmenta_Resources":   ToCamel(ToPlural(resourceName)),
-		"Fragmenta_Resource":    ToCamel(resourceName),
-		"fragmenta_fields":      structFields(),
-		"fragmenta_form_fields": formFields(),
-		"fragmenta_show_fields": showFields(),
-		"fragmenta_new_fields":  newFields(),
-		"fragmenta_columns":     showcolumns(),
-		"fragmenta_db":          ConfigDevelopment["db"],
-		"fragmenta_db_user":     ConfigDevelopment["db_user"],
-		"fragmenta_app_name":    appServerName(),
+		"freska_app_path":    filepath.Join(appPath(), appGeneratePath()),
+		"freska_resources":   ToPlural(resourceName),
+		"freska_resource":    resourceName,
+		"Freska_Resources":   ToCamel(ToPlural(resourceName)),
+		"Freska_Resource":    ToCamel(resourceName),
+		"freska_fields":      structFields(),
+		"freska_form_fields": formFields(),
+		"freska_show_fields": showFields(),
+		"freska_new_fields":  newFields(),
+		"freska_columns":     showcolumns(),
+		"freska_db":          ConfigDevelopment["db"],
+		"freska_db_user":     ConfigDevelopment["db_user"],
+		"freska_app_name":    appServerName(),
 	}
 
 	return renderTemplate(tmpl, context)
