@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/freska/assets"
+	"github.com/freska-cms/assets"
 )
 
 // RunDeploy builds the assets, builds the server,

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/freska/query"
+	"github.com/freska-cms/query"
 	"log"
 	"path/filepath"
 	"sort"

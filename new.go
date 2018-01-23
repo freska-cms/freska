@@ -19,7 +19,7 @@ const (
 )
 
 // RunNew creates a new freska project given the argument
-// Usage: freska new [app|cms|api| valid repo path e.g. github.com/freska/freska-cms]
+// Usage: freska new [app|cms|api| valid repo path e.g. github.com/freska-cms/freska-cms]
 func RunNew(args []string) {
 
 	// Remove freska backup from args list
@@ -50,11 +50,11 @@ func RunNew(args []string) {
 
 	switch repo {
 	case "app":
-		repo = "github.com/freska/freska-app"
+		repo = "github.com/freska-cms/freska-app"
 	case "cms":
-		repo = "github.com/freska/freska-cms"
+		repo = "github.com/freska-cms/freska-cms"
 	case "blog":
-		repo = "github.com/freska/freska-blog"
+		repo = "github.com/freska-cms/freska-blog"
 	default:
 		// TODO clean repo if it contains https or .git...
 	}

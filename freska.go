@@ -1,6 +1,6 @@
 // A command line tool for freska which can be used to build and run websites
 // this tool calls subcommands for most of the work, usually one command per file in this pkg
-// See docs at http://godoc.org/github.com/freska/freska
+// See docs at http://godoc.org/github.com/freska-cms/freska
 
 package main
 
@@ -201,7 +201,7 @@ func secretsPath(projectPath string) string {
 }
 
 func templatesPath() string {
-	return os.ExpandEnv("$GOPATH/src/github.com/freska/freska/templates")
+	return os.ExpandEnv("$GOPATH/src/github.com/freska-cms/freska/templates")
 }
 
 // RunServer runs the server

@@ -3,7 +3,7 @@ Freska provides a set of independent libraries for building golang web applicati
 
 To install run:
 
-    go get github.com/freska/freska
+    go get github.com/freska-cms/freska
 
 
 The following subcommands are available when using the command line freska tool:
