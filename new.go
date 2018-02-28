@@ -18,11 +18,11 @@ const (
 	createTablesMigrationName   = "Create-Tables"
 )
 
-// RunNew creates a new fragmenta project given the argument
-// Usage: fragmenta new [app|cms|api| valid repo path e.g. github.com/fragmenta/fragmenta-cms]
+// RunNew creates a new freska project given the argument
+// Usage: freska new [app|cms|api| valid repo path e.g. github.com/freska/freska-cms]
 func RunNew(args []string) {
 
-	// Remove fragmenta backup from args list
+	// Remove freska backup from args list
 	args = args[2:]
 
 	// We expect two args left:
@@ -50,11 +50,11 @@ func RunNew(args []string) {
 
 	switch repo {
 	case "app":
-		repo = "github.com/fragmenta/fragmenta-app"
+		repo = "github.com/freska/freska-app"
 	case "cms":
-		repo = "github.com/fragmenta/fragmenta-cms"
+		repo = "github.com/freska/freska-cms"
 	case "blog":
-		repo = "github.com/fragmenta/fragmenta-blog"
+		repo = "github.com/freska/freska-blog"
 	default:
 		// TODO clean repo if it contains https or .git...
 	}
@@ -178,14 +178,14 @@ func reifyNewSite(goProjectPath, projectPath string) error {
 // the user should be prompted to:
 
 func showNewSiteHelp(projectPath string) {
-	helpString := fragmentaDivider
+	helpString := freskaDivider
 	helpString += "Congratulations, we've made a new website at " + projectPathRelative(projectPath)
-	helpString += "\n  if you wish you can edit the database config at secrets/fragmenta.json and sql at db/migrate"
+	helpString += "\n  if you wish you can edit the database config at secrets/freska.json and sql at db/migrate"
 	helpString += "\n  To get started, run the following commands:"
 	helpString += "\n  cd " + projectPath
-	helpString += "\n  fragmenta migrate"
-	helpString += "\n  fragmenta"
-	helpString += fragmentaDivider + "\n"
+	helpString += "\n  freska migrate"
+	helpString += "\n  freska"
+	helpString += freskaDivider + "\n"
 	fmt.Print(helpString) // fmt to avoid time output
 }
 

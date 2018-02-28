@@ -11,10 +11,10 @@ import (
 
 // RunBackup creates a backup of the chosen database
 func RunBackup(args []string) {
-	// Remove fragmenta backup from args list
+	// Remove freska backup from args list
 	args = args[2:]
 
-	switch fragmentaConfig(args) {
+	switch freskaConfig(args) {
 	case ModeProduction:
 		backupDB(ConfigProduction)
 	case ModeTest:
@@ -26,10 +26,10 @@ func RunBackup(args []string) {
 
 // RunRestore restores the chosen database from a backup
 func RunRestore(args []string) {
-	// Remove fragmenta backup from args list
+	// Remove freska backup from args list
 	args = args[2:]
 
-	switch fragmentaConfig(args) {
+	switch freskaConfig(args) {
 	case ModeProduction:
 		restoreDB(ConfigProduction)
 	case ModeTest:
@@ -43,7 +43,7 @@ func RunRestore(args []string) {
 	_, err := os.Stat(restore)
 	if err == nil {
 		log.Printf("Running restore script from " + restore)
-		mode := fragmentaConfig(args)
+		mode := freskaConfig(args)
 		result, err := runCommand(restore, mode)
 		if err != nil {
 			log.Printf("Error running restore script %s", err)
@@ -140,8 +140,8 @@ func backupDB(config map[string]string) {
 	log.Printf("Backup complete of db %s", db)
 }
 
-// fragmentaConfig returns the config set by args (development by default)
-func fragmentaConfig(args []string) string {
+// freskaConfig returns the config set by args (development by default)
+func freskaConfig(args []string) string {
 	if len(args) > 0 {
 		return args[0]
 	}

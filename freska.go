@@ -1,6 +1,6 @@
-// A command line tool for fragmenta which can be used to build and run websites
+// A command line tool for freska which can be used to build and run websites
 // this tool calls subcommands for most of the work, usually one command per file in this pkg
-// See docs at http://godoc.org/github.com/fragmenta/fragmenta
+// See docs at http://godoc.org/github.com/freska/freska
 
 package main
 
@@ -17,10 +17,10 @@ import (
 
 const (
 	// The version of this tool
-	fragmentaVersion = "1.5.4"
+	freskaVersion = "1.5.4"
 
 	// Used for outputting console messages
-	fragmentaDivider = "\n------\n"
+	freskaDivider = "\n------\n"
 )
 
 // Modes used for setting the config used
@@ -31,13 +31,13 @@ const (
 )
 
 var (
-	// ConfigDevelopment holds the development config from fragmenta.json
+	// ConfigDevelopment holds the development config from freska.json
 	ConfigDevelopment map[string]string
 
-	// ConfigProduction holds development config from fragmenta.json
+	// ConfigProduction holds development config from freska.json
 	ConfigProduction map[string]string
 
-	// ConfigTest holds the app test config from fragmenta.json
+	// ConfigTest holds the app test config from freska.json
 	ConfigTest map[string]string
 )
 
@@ -63,7 +63,7 @@ func main() {
 		return
 	}
 
-	// If this is a valid fragmenta project, try reading the config
+	// If this is a valid freska project, try reading the config
 	// NB we still run even if config fails,
 	// as we want to at least try a build/run cycle to enable bootstrap
 	if isValidProject(projectPath) {
@@ -88,7 +88,7 @@ func main() {
 
 	case "test", "t":
 		if requireValidProject(projectPath) {
-			// Remove fragmenta test from args list
+			// Remove freska test from args list
 			args = args[2:]
 			RunTests(args)
 		}
@@ -135,39 +135,39 @@ func main() {
 
 // ShowVersion shows the version of this tool
 func ShowVersion() {
-	helpString := fragmentaDivider
-	helpString += fmt.Sprintf("Fragmenta version: %s", fragmentaVersion)
-	helpString += fragmentaDivider
+	helpString := freskaDivider
+	helpString += fmt.Sprintf("Freska version: %s", freskaVersion)
+	helpString += freskaDivider
 	log.Print(helpString)
 }
 
 // ShowHelp shows the help for this tool
 func ShowHelp(args []string) {
-	helpString := fragmentaDivider
-	helpString += fmt.Sprintf("Fragmenta version: %s", fragmentaVersion)
-	helpString += "\n  fragmenta version -> display version"
-	helpString += "\n  fragmenta help -> display help"
-	helpString += "\n  fragmenta new [app|cms|blog|URL] path/to/app -> creates a new app from the repository at URL at the path supplied"
-	helpString += "\n  fragmenta -> builds and runs a fragmenta app"
-	helpString += "\n  fragmenta server -> builds and runs a fragmenta app"
-	helpString += "\n  fragmenta test  -> run tests"
-	helpString += "\n  fragmenta migrate -> runs new sql migrations in db/migrate"
-	helpString += "\n  fragmenta backup [development|production|test] -> backup the database to db/backup"
-	helpString += "\n  fragmenta restore [development|production|test] -> backup the database from latest file in db/backup"
-	helpString += "\n  fragmenta deploy [development|production|test] -> build and deploy using bin/deploy"
-	helpString += "\n  fragmenta generate resource [name] [fieldname]:[fieldtype]* -> creates resource CRUD actions and views"
-	helpString += "\n  fragmenta generate migration [name] -> creates a new named sql migration in db/migrate"
+	helpString := freskaDivider
+	helpString += fmt.Sprintf("Freska version: %s", freskaVersion)
+	helpString += "\n  freska version -> display version"
+	helpString += "\n  freska help -> display help"
+	helpString += "\n  freska new [app|cms|blog|URL] path/to/app -> creates a new app from the repository at URL at the path supplied"
+	helpString += "\n  freska -> builds and runs a freska app"
+	helpString += "\n  freska server -> builds and runs a freska app"
+	helpString += "\n  freska test  -> run tests"
+	helpString += "\n  freska migrate -> runs new sql migrations in db/migrate"
+	helpString += "\n  freska backup [development|production|test] -> backup the database to db/backup"
+	helpString += "\n  freska restore [development|production|test] -> backup the database from latest file in db/backup"
+	helpString += "\n  freska deploy [development|production|test] -> build and deploy using bin/deploy"
+	helpString += "\n  freska generate resource [name] [fieldname]:[fieldtype]* -> creates resource CRUD actions and views"
+	helpString += "\n  freska generate migration [name] -> creates a new named sql migration in db/migrate"
 
-	helpString += fragmentaDivider
+	helpString += freskaDivider
 	log.Print(helpString)
 }
 
 // FIXME - move all instances of hardcoded paths out into optional app config variables
-// Ideally we don't care about project structure apart from the load the fragmenta.json file
+// Ideally we don't care about project structure apart from the load the freska.json file
 
 // serverName returns the name of our server file - TODO:read from config
 func serverName() string {
-	return "fragmenta-server" // for now, should use configs
+	return "freska-server" // for now, should use configs
 }
 
 func localServerPath(projectPath string) string {
@@ -193,7 +193,7 @@ func publicPath(projectPath string) string {
 }
 
 func configPath(projectPath string) string {
-	return projectPath + "/secrets/fragmenta.json"
+	return projectPath + "/secrets/freska.json"
 }
 
 func secretsPath(projectPath string) string {
@@ -201,7 +201,7 @@ func secretsPath(projectPath string) string {
 }
 
 func templatesPath() string {
-	return os.ExpandEnv("$GOPATH/src/github.com/fragmenta/fragmenta/templates")
+	return os.ExpandEnv("$GOPATH/src/github.com/freska/freska/templates")
 }
 
 // RunServer runs the server
@@ -255,12 +255,12 @@ func requireValidProject(projectPath string) bool {
 		return true
 	}
 
-	log.Printf("\nNo fragmenta project found at this path\n")
+	log.Printf("\nNo freska project found at this path\n")
 	return false
 
 }
 
-// isValidProject returns true if this is a valid fragmenta project (checks for server.go file and config file)
+// isValidProject returns true if this is a valid freska project (checks for server.go file and config file)
 func isValidProject(projectPath string) bool {
 
 	// Make sure we have server.go at root of this dir

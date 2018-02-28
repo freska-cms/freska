@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/fragmenta/query"
+	"github.com/freska/query"
 	"log"
 	"path/filepath"
 	"sort"
@@ -12,10 +12,10 @@ import (
 // RunMigrate runs all pending migrations
 func RunMigrate(args []string) {
 
-	// Remove fragmenta backup from args list
+	// Remove freska backup from args list
 	args = args[2:]
 
-	switch fragmentaConfig(args) {
+	switch freskaConfig(args) {
 	case ModeProduction:
 		migrateDB(ConfigProduction)
 	case ModeTest:
@@ -27,10 +27,11 @@ func RunMigrate(args []string) {
 }
 
 // migrateDB finds the last run migration, and run all those after it in order
-// We use the fragmenta_metadata table to do this
+// We use the freska_metadata table to do this
 func migrateDB(config map[string]string) {
 	var migrations []string
 	var completed []string
+
 
 	// Get a list of migration files
 	files, err := filepath.Glob("./db/migrate/*.sql")
@@ -57,27 +58,26 @@ func migrateDB(config map[string]string) {
 		if !contains(filename, migrations) {
 			log.Printf("Running migration %s", filename)
 
-			args := []string{"-d", config["db"], "-f", file}
+			args := []string{"-h", config["db_host"], "-p", config["db_port"], "-d", config["db"], "-f", file, "-U", config["db_user"]}
 			if strings.Contains(filename, createDatabaseMigrationName) {
-				args = []string{"-f", file}
+				args = []string{"-h", config["db_host"], "-p", config["db_port"], "-f", file, "-U", config["db_user"]}
 				log.Printf("Running database creation migration: %s", file)
 			}
-
 			// Execute this sql file against the database
 			result, err := runCommand("psql", args...)
 			if err != nil || strings.Contains(string(result), "ERROR") {
 				if err == nil {
 					err = fmt.Errorf("\n%s", string(result))
 				}
-
 				// If at any point we fail, log it and break
 				log.Printf("ERROR loading sql migration:%s\n", err)
 				log.Printf("All further migrations cancelled\n\n")
 				break
+
 			}
 
 			completed = append(completed, filename)
-			log.Printf("Completed migration %s\n%s\n%s", filename, string(result), fragmentaDivider)
+			log.Printf("Completed migration %s\n%s\n%s", filename, string(result), freskaDivider)
 		}
 	}
 
@@ -106,16 +106,16 @@ func openDatabase(config map[string]string) error {
 		return err
 	}
 
-	log.Printf("%s\n", fragmentaDivider)
+	log.Printf("%s\n", freskaDivider)
 	log.Printf("Opened database at %s for user %s", config["db"], config["db_user"])
 	return nil
 }
 
-// readMetadata reads the metadata from the fragmenta_metadata table
+// readMetadata reads the metadata from the freska_metadata table
 func readMetadata() []string {
 	var migrations []string
 
-	sql := "select migration_version from fragmenta_metadata order by id desc;"
+	sql := "select migration_version from freska_metadata order by id desc;"
 
 	rows, err := query.QuerySQL(sql)
 	if err != nil {
@@ -139,12 +139,12 @@ func readMetadata() []string {
 	return migrations
 }
 
-// writeMetadata writes a new row in the fragmenta_metadata table to record our action
+// writeMetadata writes a new row in the freska_metadata table to record our action
 func writeMetadata(config map[string]string, migrations []string) {
 
 	for _, m := range migrations {
-		sql := "Insert into fragmenta_metadata(updated_at,fragmenta_version,migration_version,status) VALUES(NOW(),$1,$2,100);"
-		result, err := query.ExecSQL(sql, fragmentaVersion, m)
+		sql := "Insert into freska_metadata(updated_at,freska_version,migration_version,status) VALUES(NOW(),$1,$2,100);"
+		result, err := query.ExecSQL(sql, freskaVersion, m)
 		if err != nil {
 			log.Printf("Database ERROR %s %s", err, result)
 		}

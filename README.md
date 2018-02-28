@@ -1,21 +1,21 @@
-# Fragmenta
+# Freska
 
-Fragmenta is a command line tool for creating, managing and deploying golang web applications. It comes with a suite of libraries which making developing web apps easier, and aims to allow managing apps without making too many assumptions about which libraries they use or their internal structure. It takes care of generating CRUD actions, handling auth, routing and rendering and leaves you to concentrate the parts of your app which are unique. 
+Freska is built on Fragmenta which is a command line tool for creating, managing and deploying golang web applications. It comes with a suite of libraries which making developing web apps easier, and aims to allow managing apps without making too many assumptions about which libraries they use or their internal structure. It takes care of generating CRUD actions, handling auth, routing and rendering and leaves you to concentrate the parts of your app which are unique. 
 
-### Using Fragmenta
+### Using Freska
 
-* fragmenta version -> display version
-* fragmenta help -> display help
-* fragmenta new [app|cms|blog|URL] path/to/app -> creates a new app from the repository at URL at the path supplied
-* fragmenta -> builds and runs a fragmenta app
-* fragmenta server -> builds and runs a fragmenta app
-* fragmenta test  -> run tests
-* fragmenta backup [development|production|test] -> backup the database to db/backup
-* fragmenta restore [development|production|test] -> backup the database from latest file in db/backup
-* fragmenta deploy [development|production|test] -> build and deploy using bin/deploy
-* fragmenta migrate -> runs new sql migrations in db/migrate
-* fragmenta generate resource [name] [fieldname]:[fieldtype]* -> creates resource CRUD actions and views
-* fragmenta generate migration [name] -> creates a new named sql migration in db/migrate
+* freska version -> display version
+* freska help -> display help
+* freska new [app|cms|blog|URL] path/to/app -> creates a new app from the repository at URL at the path supplied
+* freska -> builds and runs a freska app
+* freska server -> builds and runs a freska app
+* freska test  -> run tests
+* freska backup [development|production|test] -> backup the database to db/backup
+* freska restore [development|production|test] -> backup the database from latest file in db/backup
+* freska deploy [development|production|test] -> build and deploy using bin/deploy
+* freska migrate -> runs new sql migrations in db/migrate
+* freska generate resource [name] [fieldname]:[fieldtype]* -> creates resource CRUD actions and views
+* freska generate migration [name] -> creates a new named sql migration in db/migrate
 
 
 ### App structure
@@ -41,11 +41,11 @@ The pkg layout within the app is up to you - defaults are provided but are not m
 
 ### Libraries
 
-The following independent packages are available for use with fragmenta apps (or other go web apps). 
+The following independent packages are available for use with freska apps (or other go web apps). 
 
 * assets - an asset pipeline with minification and concatenation with asset fingerprinting
 * auth - utilities for authentication and authorisation
-* fragmenta - a command line tool for generating and developing websites
+* freska - a command line tool for generating and developing websites
 * model - a base model class for optional inclusion in models
 * * file - a package for handling file uploads
 * * validate - a package for handling field validation
